@@ -24,18 +24,18 @@ class MysqlDatabase{
         }
 
     }
-
+    public function getConnexion() {
+    return $this->pdo;    
+    }
     public function prepare(string $sql,array $data, string $entityName, bool $single = false)
     {
-
-        
         $stmt = $this->pdo->prepare($sql);
+        echo "<br>";
+
         $stmt->execute($data);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, $entityName);
         if ($single) {
-            // var_dump(1);
-            // die();
             return $stmt->fetch();
         }
         return $stmt->fetchAll();

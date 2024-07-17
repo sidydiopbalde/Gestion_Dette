@@ -1,8 +1,11 @@
 <?php
 
 namespace App\App;
+
+require_once '/var/www/html/gestiondette3/src/config/config.php';
+var_dump($data);
 use App\Core\Database\MysqlDatabase;
-use Dotenv\Dotenv;
+
 
 class App{
     private static $instance;
@@ -21,10 +24,8 @@ class App{
 
     public function getDatabase(){
         if ($this->database === null) {
-            $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
-            $dotenv->load();
-
-            $this->database =new MysqlDatabase($_ENV['dsn'],$_ENV['DB_USER'],$_ENV['DB_PASSWORD']);
+            
+            $this->database =new MysqlDatabase(dsn,DB_USER,DB_PASSWORD);
         }
         return $this->database;
     }

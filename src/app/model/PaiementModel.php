@@ -3,7 +3,7 @@
 namespace App\App\Model;
 
 use App\Core\Model\Model;
-use App\App\Entity\PaimentEntity;
+use App\App\Entity\PayerEntity;
 
 class PaiementModel extends Model
 {
@@ -11,7 +11,7 @@ class PaiementModel extends Model
 
     public function getEntity()
     {
-        return PaimentEntity::class;
+        return PayerEntity::class;
     }
 
     public function getTotalPaiementByDetteId($detteId)
@@ -22,9 +22,12 @@ class PaiementModel extends Model
         if ($statement) {
         return $statement->total_paiement;
         }
-        
-    
     }
+
+   public function payerDetteRequest($data){
+    $sql = "INSERT INTO $this->table (id_dette, montant_verse, date) VALUES (:id_dette, :montant_verse, NOW())";
+    $this->database->prepare($sql, $data,$this->getEntity());
+   }
 
 }
 

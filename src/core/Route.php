@@ -32,7 +32,8 @@
 namespace App\Core;
 
 use App\App\App;
-
+use ReflectionClass;
+use ReflectionException;
 class Route {
     public static $routes = [];
 
@@ -55,15 +56,25 @@ class Route {
             if (is_array($route) && isset($route['controller']) && isset($route['action'])) {
                 $controllerClass = "App\\App\\Controller\\{$route['controller']}";
                 $action = $route['action'];
-                if (class_exists($controllerClass)) {
-                    $controller = new $controllerClass();
+                
+                try {
+                    // Vérifier l'existence de la classe avec Reflection
+                    $reflector = new ReflectionClass($controllerClass);
                     
-                    if (method_exists($controller, $action)) {
-                        $controller->$action();
+                    // Vérifier l'existence de la méthode dans la classe avec Reflection
+                    if ($reflector->hasMethod($action)) {
+                        $controller = $reflector->newInstance();
+                        $method = $reflector->getMethod($action);
+                        
+                        if ($method->isPublic()) {
+                            $method->invoke($controller);
+                        } else {
+                            echo "L'action '{$action}' n'est pas accessible dans le contrôleur '{$controllerClass}'.";
+                        }
                     } else {
                         echo "L'action '{$action}' n'existe pas dans le contrôleur '{$controllerClass}'.";
                     }
-                } else {
+                } catch (ReflectionException $e) {
                     echo "Le contrôleur '{$controllerClass}' n'existe pas.";
                 }
             } else {
@@ -72,5 +83,6 @@ class Route {
         } else {
             echo 'page 404';
         }
+        
     }
 }

@@ -8,15 +8,26 @@ class DetteEntity extends Entity
 {
     private int $id =1;
     private string $date;
-    private float $montant_total;
-    private float $montant_verse;
-    private float $montant_restant;
-    private int $utilisateursId;
-    private float $total_verse;
-    private float $total_restant;
+    private string $nom;
+    private string $prenom;
+    private string $email;
+    private string $date_dette;
+    private float $totalDette=0;
+    private float $montantVerse;
+    private float $telephone;
+    private float $montantDette;
+    private float $montant;
+    private float $montantRestant;
+    private int $id_dette;
 
-    private float $total_dette;
-
+   
+    // u.id,
+    //     u.nom,
+    //     u.prenom,
+    //     u.email,
+    //     d.date as date_dette,
+    //     SUM(d.montant) AS totalDette,
+    //     SUM(p.montant_verse) AS montantVerse
     public function __construct()
     {
         

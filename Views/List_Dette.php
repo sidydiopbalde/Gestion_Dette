@@ -1,87 +1,86 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client Details</title>
+    <title>Client Suivie Dette</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 p-8">
     <div class="container mx-auto bg-white p-6 rounded-lg shadow-md">
         <div class="flex justify-between items-center mb-4">
-            <div class="text-xl font-semibold">Client: <span class="font-normal">Sidy Diop Balde</span></div>
-            <div class="text-xl font-semibold">Numéro: <span class="font-normal">784316538</span></div>
+            <h1 class="text-xl font-bold">Client: <?= $nom ?? '' ?> <?= $prenom ?? '' ?></h1>
+            <p class="text-lg text-red-500">Numéro: <?=  $tel ?? '' ?></p>
         </div>
         <div class="mb-4">
-            <label class="block text-lg font-semibold mb-2" for="status">Status:</label>
-            <select id="status" class="block w-40 border-gray-300 rounded-md shadow-sm">
-                <option>SOLDÉE</option>
-                <option>NON SOLDÉE</option>
-                <!-- Add other status options here -->
+        <form method="POST" action="dette">
+            <label for="filter">Filtrer les dettes:</label>
+            <select id="filter" name="filter" onchange="this.form.submit()">
+                <option value="non_soldes" <?= $filter == 'non_soldes' ? 'selected' : '' ?>>Non soldées</option>
+                <option value="soldes" <?= $filter == 'soldes' ? 'selected' : '' ?>>Soldées</option>
             </select>
+            <input type="hidden" name="dette" value="<?= $tel ?? '' ?>">
+            <input type="hidden" name="page" id="page" value="<?= $page ?>">
+        </form>
         </div>
-        <div class="overflow-x-auto">
-            <table class="min-w-full bg-white">
-                <thead class="bg-gray-800 text-white">
+        <table class="table-auto w-full mb-4">
+            <thead>
+                <tr class="bg-gray-300">
+                    <th class="py-2 px-4">DATE</th>
+                    <th class="py-2 px-4">MONTANT</th>
+                    <th class="py-2 px-4">RESTANT</th>
+                    <th class="py-2 px-4">PAIEMENT</th>
+                    <th class="py-2 px-4">LIST-PAIEMENT</th>
+                    <th class="py-2 px-4">ARTICLES</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($dette)):?>
+                    <?php foreach ($dette as $det): ?>
+                        <tr class="bg-gray-200">
+                            <td class="py-2 px-4"><?= $det->date_dette ?? ''?></td>
+                            <td class="py-2 px-4"><?= $det->montantDette ?? ''?></td>
+                            <td class="py-2 px-4"><?= $det->montantRestant ?? ''?></td>
+                            <form action="payer" method="post">
+                                <td class="py-2 px-4 text-green-600"><button name="payer"  type="submit" value="<?=$det->id ?? ''?>" <?= $det->montantRestant == 0 ? 'disabled' : '' ?> class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded">PAYER</button></td>
+                            </form>
+                            <form action="list_paiement" method="post">
+                            <td class="py-2 px-4 text-blue-600"><button name="list_paiement" type="submit" value="<?=$det->id ?? ''?>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">LIST</button></td>
+                            </form>
+                            <form action="product" method="post">
+                            <td class="py-2 px-4 text-blue-600"><button name="product" type="submit" value="<?=$det->id ?? ''?>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">VIEWS</button></td>
+                            </form>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
                     <tr>
-                        <th class="py-2 px-4">DATE</th>
-                        <th class="py-2 px-4">MONTANT</th>
-                        <th class="py-2 px-4">RESTANT</th>
-                        <th class="py-2 px-4">PAIEMENT</th>
-                        <th class="py-2 px-4">LIST-PAIEMENT</th>
-                        <th class="py-2 px-4">ARTICLES</th>
+                        <td colspan="6" class="py-2 px-4 text-center">Aucune dette trouvée.</td>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr class="bg-gray-200">
-                        <td class="py-2 px-4">01/12/2024</td>
-                        <td class="py-2 px-4">120000</td>
-                        <td class="py-2 px-4">80000</td>
-                        <td class="py-2 px-4 text-green-600">PAYER</td>
-                        <td class="py-2 px-4 text-blue-600">LIST</td>
-                        <td class="py-2 px-4 text-blue-600">VIEWS</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4">01/12/2024</td>
-                        <td class="py-2 px-4">120000</td>
-                        <td class="py-2 px-4">65000</td>
-                        <td class="py-2 px-4 text-green-600">PAYER</td>
-                        <td class="py-2 px-4 text-blue-600">LIST</td>
-                        <td class="py-2 px-4 text-blue-600">VIEWS</td>
-                    </tr>
-                    <tr class="bg-gray-200">
-                        <td class="py-2 px-4">01/12/2024</td>
-                        <td class="py-2 px-4">120000</td>
-                        <td class="py-2 px-4">100000</td>
-                        <td class="py-2 px-4 text-green-600">PAYER</td>
-                        <td class="py-2 px-4 text-blue-600">LIST</td>
-                        <td class="py-2 px-4 text-blue-600">VIEWS</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                <?php endif; ?>
+            </tbody>
+        </table>
+     
         <!-- Pagination -->
-        <div class="flex justify-center mt-6">
-            <nav aria-label="Page navigation example">
-                <ul class="inline-flex items-center -space-x-px">
-                    <li>
-                        <a href="#" class="py-2 px-3 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700">Previous</a>
-                    </li>
-                    <li>
-                        <a href="#" class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">1</a>
-                    </li>
-                    <li>
-                        <a href="#" class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">2</a>
-                    </li>
-                    <li>
-                        <a href="#" class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">3</a>
-                    </li>
-                    <li>
-                        <a href="#" class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700">Next</a>
-                    </li>
-                </ul>
-            </nav>
+        <!-- <div class="flex  items-center">
+            <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Précédent</button>
+            <span>Page 1 de 10</span>
+            <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Suivant</button>
+        </div> -->
+
+        <div class="flex justify-between items-center">
+            <?php if (($page > 1)): ?>
+                <a href="?page=<?= $page - 1 ?? '' ?>" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Précédent</a>
+            <?php else: ?>
+                <span class="bg-gray-300 text-white font-bold py-2 px-4 rounded cursor-not-allowed">Précédent</span>
+            <?php endif; ?>
+
+            <span>Page <?= $page ?? '' ?> de <?= $totalPages ?? '' ?></span>
+
+            <?php if ($page < $totalPages): ?>
+                <a href="?page=<?= $page + 1 ?>" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Suivant</a>
+            <?php else: ?>
+                <span class="bg-gray-300 text-white font-bold py-2 px-4 rounded cursor-not-allowed">Suivant</span>
+            <?php endif; ?>
         </div>
     </div>
 </body>

@@ -37,9 +37,6 @@ class UtilisateurModel extends Model{
 
     public function search(string $telephone)
     {
-        //    $entityName = "App\\App\\DetteClientPaiementEntity";
-     
-
         $sql = "SELECT 
         u.id,
         u.nom,

@@ -1,7 +1,16 @@
 <?php
 namespace App\Core;
+// use App\Core\Validator\Validator1;
 
 class Controller {
+    protected $validator;
+
+    public function __construct(){
+        // var_dump("sidy");
+        // die();
+        // $this->validator=new Validator1();
+    }
+   
     /**
      * Renders a view file.
      *

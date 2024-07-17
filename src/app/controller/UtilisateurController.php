@@ -4,7 +4,7 @@ namespace App\App\Controller;
 use App\Core\Validator\Validator;
 use App\App\App;
 use App\Core\Controller;
-
+use App\Core\Validator\Validator1;
 class UtilisateurController extends Controller{
 
     private $utilisateurModel;
@@ -16,23 +16,22 @@ class UtilisateurController extends Controller{
         $this->utilisateurModel = App::getInstance()->getModel("utilisateur");
         $this->detteModel = App::getInstance()->getModel("dette");
         $this->paiementModel = App::getInstance()->getModel("paiement");
+        // $this->validator=new Validator1();
     }
 
-  //rechercher d'un client     
+ 
   public function searchClientByTel () {
-    $tel = getPostTel();
-    $clients = $this->utilisateurModel->search($tel);
-    // echo '<pre>';
-    // var_dump('client::',$clients);
-    // echo '</pre>';
-    $error='';
-    if(empty($clients->id)){
-        $error='client not found';
-    } 
-   
-    $this->renderView('Client_SuivieDette',['clients' => $clients,'error'=>$error]);
+        $tel = getPostTel();
+        $clients = $this->utilisateurModel->search($tel);
+        $error='';
+        if(empty($clients->id)){
+            $error='client not found';
+        } 
+    
+        $this->renderView('Client_SuivieDette',['clients' => $clients,'error'=>$error]);
  }
     public function index(){
+        
         $clients = $this->utilisateurModel->all();
        
         $this->renderView('Client_SuivieDette', ['clients' => $clients]);
@@ -47,12 +46,9 @@ class UtilisateurController extends Controller{
         $this->redirect("Client_SuivieDette.php");
     }
 
-
     public function addClient() {
    
-        // $this->utilisateurModel->save($data);
-        // $clients = $this->utilisateurModel->all();
-        // $this->renderView('Client_SuivieDette', ['clients' => $clients]);
+      
         $data = [
             'nom' => $_POST['nom'],
             'prenom' => $_POST['prenom'],
@@ -61,9 +57,7 @@ class UtilisateurController extends Controller{
             'photo' => isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK ? $_FILES['photo']['name'] : 'user.jpeg',
             'motDePasse'=> password_hash("passer123", PASSWORD_BCRYPT),
         ]; 
-            // echo '<pre>';
-            // var_dump($data);
-            // echo '</pre>';
+          
     
 
         $rules = [
@@ -74,7 +68,17 @@ class UtilisateurController extends Controller{
      
         ];
         // Créer une instance de Validator et valider les données
-        $validator = new Validator();
+         $validator = new Validator();
+        
+    //  $errors=   $this->validator->validate($_POST,[
+    //         'nom'=>['required','min:3', "max:50"],
+    //         'prenom'=>['required','min:3', "max:50"],
+    //         'email'=>['required','email'],
+    //         'tel'=>['required','phone']
+
+    //     ]);
+    //     var_dump($errors);
+    //     die();
         $validator->validate($data, $rules);
 
         if ($validator->fails()) {
@@ -98,9 +102,7 @@ class UtilisateurController extends Controller{
        
         return  $clients;
     }
-
-   
-  
+ 
 
 }
 

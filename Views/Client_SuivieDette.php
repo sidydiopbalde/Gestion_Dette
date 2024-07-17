@@ -71,10 +71,10 @@
             <div class="flex justify-between mb-4">
                     <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Client</button>
                 <form action="nouvelle" method="post">
-                    <button name="nouvelle" type="submit" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Nouvelle</button>
+                    <button name="nouvelle" value="<?=$clients->id ?? ''?>" type="submit" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Nouvelle</button>
                 </form>
                 <form action="dette" method="post">
-                <button name="dette" type="submit" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Dette</button>
+                <button name="dette" value="<?=$clients->telephone ?? ''?>" type="submit" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Dette</button>
                 </form>
             </div>
             <div class="mb-4">
@@ -86,11 +86,7 @@
                     <?php endif; ?>
                     </div>
             </div>
-            <?php 
-                $totalDette = $clients->totalDette ?? 0;
-                $montantVerse = $clients->montant_verse ?? 0;
-                $restant = ($totalDette - $montantVerse) ?? 0 ;
-             ?>
+          
             <?php if(isset($clients)):?>
             <div class="mb-4">
                 <p><strong>Nom:</strong>  <?=  $clients->nom ?? ''?> </p>
@@ -99,9 +95,9 @@
                 <p><strong>Tel:</strong> <?= $clients->telephone ?? ''?></p>
             </div>
             <div class="mb-4">
-                <p><strong>Total Dette:</strong> <?= $clients->totalDette ?? ''?> FCFA</p>
-                <p><strong>Montant Versé:</strong><?= $clients->montantVerse ?? ''?> FCFA</p>
-                <p><strong>Montant Restant:</strong><?= $restant ?? ''?> FCFA</p>
+                <p><strong>Total Dette:</strong> <?= $clients->totalDette ?? 0?> FCFA</p>
+                <p><strong>Montant Versé:</strong><?= $clients->montantVerse ?? 0?> FCFA</p>
+                <p><strong>Montant Restant:</strong><?= ($clients->totalDette ?? 0 - $clients->montantVerse ?? 0 ) ?? 0?> FCFA</p>
             </div>
             <?php endif;?>
         </div>

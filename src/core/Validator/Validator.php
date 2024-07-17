@@ -57,3 +57,4 @@ class Validator {
         return $this->errors;
     }
 }
+
