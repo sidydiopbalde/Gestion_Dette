@@ -5,7 +5,13 @@ namespace App\Core\Database;
 use PDO;
 use PDOException;
 
-class MysqlDatabase{
+interface DatabaseInterface {
+    public function prepare(string $sql, array $data, string $entityName, bool $single = false);
+    public function query(string $sql, string $entityName, bool $single = false);
+    public function getConnexion();
+}
+
+class MysqlDatabase implements DatabaseInterface{
 
     private $pdo;
 

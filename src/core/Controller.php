@@ -2,7 +2,11 @@
 namespace App\Core;
 // use App\Core\Validator\Validator1;
 
-class Controller {
+interface ControllerInterface {
+    public function renderView(string $view, array $data = []);
+    public function redirect(string $url);
+}
+class Controller implements ControllerInterface {
     protected $validator;
 
     public function __construct(){
@@ -10,7 +14,7 @@ class Controller {
         // die();
         // $this->validator=new Validator1();
     }
-   
+    
     /**
      * Renders a view file.
      *

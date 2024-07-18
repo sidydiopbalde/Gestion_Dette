@@ -3,7 +3,12 @@ namespace App\Core\Entity;
 
 use \ReflectionClass;
 
-abstract class Entity {
+interface EntityInterface {
+    public function __get($property);
+    public function __set($property, $value);
+}
+
+abstract class Entity implements EntityInterface {
     public function __get($property) {
         $reflector = new ReflectionClass($this);
         if ($reflector->hasProperty($property)) {

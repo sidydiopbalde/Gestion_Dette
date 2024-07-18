@@ -23,9 +23,9 @@ class ArticleDetteModel extends Model
     FROM 
         Articles a
     LEFT JOIN 
-        DetailsDettes det ON a.id = det.id_article
+        DetailsDettes det ON a.id = det.id_Article
     WHERE 
-        det.id_dette = :id;";
+        det.dette_id = :id;";
         $data = ["id" => $id];
 
         return $this->query($sql,$this->getEntity(),   $data);

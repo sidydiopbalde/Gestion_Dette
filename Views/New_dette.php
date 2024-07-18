@@ -10,8 +10,8 @@
 <div class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
 <div class="bg-white rounded-lg shadow-lg max-w-md w-full">
   <div class="bg-gray-200 p-4 rounded-t-lg">
-    <h2 class="text-lg font-semibold">Client: Sidy Diop Balde</h2>
-    <p class="text-sm text-gray-600">Tel: +221 784316538</p>
+    <h2 class="text-lg font-semibold">Client: maman Sokhna</h2>
+    <p class="text-sm text-gray-600">Tel: 772559074</p>
   </div>
   
   <div class="p-6 space-y-4">
@@ -20,15 +20,14 @@
         <label class="font-medium text-gray-700">REF:</label>
         <input type="text" value="" name="ref" class="bg-gray-600 text-white px-3 py-1 rounded">
         <button type="submit"  class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">OK</button>
-
+        <div class="text-red-500"><?=$error_ref ?? ''?></div>
       </form>
     </div>
     
     <form action="nouvelle" method="post">
     <div class="flex items-center space-x-4">
 
-   
-      <div>
+       <div>
         <label class="block text-sm font-medium text-gray-700">libelle:</label>
         <input type="text" name="libelle" value="<?=$articles['libelle'] ?? ''?>" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
       </div>
@@ -42,6 +41,7 @@
       </div>
       <button class="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 transition mt-6">OK</button>
     </div>
+    <div class="text-red-500"><?=$error_qte ?? ''?></div>
   </form>
     
     <table class="max-w-full divide-y divide-gray-200">
@@ -54,14 +54,14 @@
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-      <?php if(isset($panier)):?>
+      <?php if(!empty($panier)):?>
     
         <?php foreach($panier as $article):?>
           <tr>
-            <td><?= $article['libelle']?></td>
-            <td><?= $article['prix']?></td>
-            <td><?= $article['quantite']?></td>
-            <td><?= $article['montant']?></td>
+            <td><?= $article['libelle'] ?? ''?></td>
+            <td><?= $article['prix'] ?? '' ?></td>
+            <td><?= $article['quantite'] ?? ''?></td>
+            <td><?= $article['montant'] ?? ''?></td>
           </tr>
             <?php endforeach?>
         <?php endif?>

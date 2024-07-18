@@ -101,6 +101,7 @@ class DetteController extends Controller
 
         if (isset($_POST['product'])) {
             $id = $_POST['product'];
+            var_dump($id);
             $products = $this->article_detteModel->getArticlesByDetteId($id);
         }
         $this->renderView('Product_List', ['products' => $products]);
@@ -117,47 +118,51 @@ class DetteController extends Controller
     }
     public function newDebt()
     {
-        // if(!Session::isset('id_user_for_debt')){
-        // }
-        var_dump($_POST['nouvelle']);
         Session::set('id_user_for_debt', $_POST['nouvelle']);
-        var_dump(Session::get('id_user_for_debt'));
         $this->renderView('New_dette', ['client' => 1]);
     }
 
     public function searchArticleByRef()
     {
+// Session::remove('panier');
+        $error_ref='';
         if (isset($_POST['ref'])) {
-
             $ref = $_POST['ref'];
             $articles = [];
             $article = $this->article_detteModel->getArticleByRef($ref);
+            if(!$article){
+                $error_ref='Ce produit ne se trouve pas dans le dépot';
+              
+            }else if(empty($_POST['ref'])){
+                $error_ref='Veuillez entrer un reference';
+            }else{
 
-            // if(!Session::get('article')){
-            //     Session::set('article',[]);
-
-            // }
-
-            if ($article) {
-                $articles = [
-                    'libelle' => $article[0]->libelle,
-                    'prix' => $article[0]->prix
-                ];
-
-                Session::set('article', $articles);
-                // if(Session::get('article')){
-                //     $panier = Session::get('article');
-                //     $panier[]=$articles;
-                //     Session::set('article',$panier);
-                // }
+                if ($article) {
+                    $articles = [
+                        'libelle' => $article[0]->libelle,
+                        'prix' => $article[0]->prix
+                    ];
+                   
+                    Session::set('article', $articles);
+                }
             }
         }
-
-
-        // $panier=Session::get('article');
-        // var_dump($panier);
+        $error_qte='';
         if (isset($_POST['quantite'])) {
+            // if(empty($_POST['quantite'])){
+            //     $error['qte']='Veuillez entrer une quantité';
+            // }else{
 
+                $article = $this->article_detteModel->getArticleByLibelle($_POST['libelle']);
+                // var_dump($article[0]->quantite_stock);die;
+                $error_qte='';
+                if($article[0]->quantite_stock < $_POST['quantite']){
+                    $error_qte='quantite non disponible';
+                }else if($_POST['quantite'] < 0 || empty($_POST['quantite'])){
+                    $error_qte='veuillez entrer une quantite valide';
+                }else{
+
+              
             $article = [
                 'libelle' => $_POST['libelle'],
                 'prix' => (float) $_POST['prix'],
@@ -184,30 +189,28 @@ class DetteController extends Controller
                 $panier[] = $article;
             }
             if (Session::isset('panier')) {
-                //  $panier = Session::get('panier');
-                //  $panier[]=$article;
                 Session::set('panier', $panier);
             }
-
             // Calculer le montant total des articles dans le panier
-            $montantTotalArticle = 0;
+             $montantTotalArticle = 0;
             foreach ($panier as $item) {
                 $montantTotalArticle += $item['montant'];
             }
         }
+        }
         $panier = Session::get('panier');
-        // var_dump(Session::get('panier'));
+   
         $this->renderView('New_dette', [
             'panier' => Session::get('panier') ?? '',
             'articles' => $articles ?? '',
-            'montantTotalArticle' => $montantTotalArticle ?? 0
+            'montantTotalArticle' => $montantTotalArticle ?? 0,
+            'error_qte'=>$error_qte,
+            'error_ref'=>$error_ref
+         
         ]);
-    }
-    // public function saveDebt(){
-    //     echo 'hello every body';
-    //     var_dump('panier' , Session::get('panier'));
-
     // }
+    }
+
     public function saveDebt()
     {
         $cl_id = Session::get('id_user_for_debt');
@@ -230,7 +233,7 @@ class DetteController extends Controller
                         $detteId = $this->detteModel->insertDette($data);
                         $id = $this->detteModel->recuplastId();
 
-                        var_dump($id);
+                      
                         if ($id) {
                             foreach ($panier as $item) {
                                 $article = $this->article_detteModel->getArticleByLibelle($item['libelle']);
@@ -241,7 +244,6 @@ class DetteController extends Controller
                                     $quantite_idArt = ['id' => $article[0]->id, 'quantite_stock' => $newQuantity];
 
                                     $this->article_detteModel->updateArticleQuantity($quantite_idArt);
-
                                     // Insérer dans la table DetailsDette
                                     $this->detailsDetteModel->insertDetailsDette([
                                         'dette_id' => $id,
@@ -254,7 +256,6 @@ class DetteController extends Controller
                                     ]);
                                 }
                             }
-
                             // Vider le panier après l'insertion
                             Session::set('panier', []);
 
