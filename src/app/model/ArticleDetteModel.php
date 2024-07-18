@@ -27,7 +27,6 @@ class ArticleDetteModel extends Model
     WHERE 
         det.dette_id = :id;";
         $data = ["id" => $id];
-
         return $this->query($sql,$this->getEntity(),   $data);
     
     }

@@ -2,10 +2,7 @@
 namespace App\Core;
 // use App\Core\Validator\Validator1;
 
-interface ControllerInterface {
-    public function renderView(string $view, array $data = []);
-    public function redirect(string $url);
-}
+
 class Controller implements ControllerInterface {
     protected $validator;
 

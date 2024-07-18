@@ -69,20 +69,14 @@ class DetteController extends Controller
             if ($filter == 'non_soldes') {
                 Session::set('det', $dette);
             }
-            //var_dump(Session::get('det'));
-
             $detteCount = count($dette);
-
             if (!empty($dette)) {
                 $tel = $dette[0]->telephone;
                 $prenom = $dette[0]->prenom;
                 $nom = $dette[0]->nom;
             }
-
             // Count total records for pagination
-
             $totalPages = ceil($detteCount / $limit);
-
             $this->renderView('List_Dette', [
                 'dette' => $dette,
                 'tel' => $tel ?? '',
@@ -252,13 +246,12 @@ class DetteController extends Controller
                                         'quantite' => $item['quantite'],
                                         'montant' => $item['montant'],
                                         'prix_unitaire' => $item['prix']
-
                                     ]);
                                 }
                             }
                             // Vider le panier après l'insertion
                             Session::set('panier', []);
-
+        
                             echo "La dette a été enregistrée avec succès.";
                         } else {
                             echo "Erreur lors de l'enregistrement de la dette.";

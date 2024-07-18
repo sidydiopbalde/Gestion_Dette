@@ -1,1 +1,20 @@
-sidy : diop
+
+Session : App\Core\Session
+
+Validator : App\Core\Validator
+
+MysqlDatabaseInterface : App\Core\Database\MysqlDatabaseInterface 
+
+MysqlDatabase : App\Core\Database\MysqlDatabase
+
+EntityInterface : App\Core\Entity\EntityInterface
+
+Entity : App\Core\Entity
+
+ModelInterface : App\Core\Model\ModelInterface
+
+Model : App\Core\Model
+
+SessionInterface : App\Core\SessionInterface
+
+ValidatorInterface : App\Core\ValidatorInterface
